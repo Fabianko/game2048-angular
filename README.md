@@ -1,4 +1,8 @@
-# Game2048angular
+# Game2048x angular
+
+This project is created with TDD and Karma, it uses basic elements to teach programming. 
+
+----
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 10.0.1.
 
