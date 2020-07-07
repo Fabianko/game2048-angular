@@ -16,44 +16,44 @@ export class Game2048Component implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
-    this.sizeArray = 2;
+    //this.sizeArray = 2;
     //this.array = this.createArray(this.sizeArray);
     //this.array = this.randomInCeros(this.array,this.sizeArray);
     this.array = [
-      [4,0,0,4,8]
+      [0,2,0],[0,0,2],[0,2,0]
     ];
     
     setTimeout(
-      ()=>{this.array = this.moveLeft(this.array);
+      ()=>{this.array = this.moveUp(this.array);
       },1000);
     
   }
 
   public createArray(size: number):  number[][] {
     var i = 0;
-    var matriz: number[][] = [];
+    var matrix: number[][] = [];
     while (i < size) {
       let j = 0;
       while (j < size) {
-        if (!matriz[i]) {
-          matriz[i] = [];
+        if (!matrix[i]) {
+          matrix[i] = [];
         }
-        matriz[i][j] = 0;
+        matrix[i][j] = 0;
         j = j + 1;
       }
       i = i + 1;
     }
-    console.log(matriz) 
-    return matriz;
+    console.log(matrix) 
+    return matrix;
   }
 
-  public getCeros(matriz,size) {
+  public getCeros(matrix,size) {
     let ceros = [];
     let i = 0;
     while (i < size) {
       let j = 0;
       while (j < size) {
-        if (matriz[i][j]==0) {
+        if (matrix[i][j]==0) {
          ceros.push({'i':i,'j':j});
         }
         j = j + 1;
@@ -64,8 +64,8 @@ export class Game2048Component implements OnInit {
   }
 
   //condicion de termino del juego
-  public isEnd(matriz,size) {
-    let ceros = this.getCeros(matriz,size);
+  public isEnd(matrix,size) {
+    let ceros = this.getCeros(matrix,size);
     if (ceros.length===0) {
       return true;
     }
@@ -74,53 +74,60 @@ export class Game2048Component implements OnInit {
     }
   }
 
-  public randomNumber(array: number[][]): number[][] {
-    var matriz :number[][];
-    return matriz;
-  }
-
-  public randomInCeros(matriz: number[][], size: number): number[][] {
-    let ceros = this.getCeros(matriz,size);
+  public randomInCeros(matrix: number[][], size: number): number[][] {
+    let ceros = this.getCeros(matrix,size);
     let selected = Math.floor(Math.random() * (ceros.length - 0)) + 0;
     let i = ceros[selected]['i'];
     let j = ceros[selected]['j'];
-    matriz[i][j] = 2;
-    return matriz;
+    matrix[i][j] = 2;
+    return matrix;
   }
 
   public moveRight(array: number[][]): number[][] {
     this.countMoviments += 1;
-    let matriz: number[][]=[];
+    let matrix: number[][]=[];
     for (let index = 0; index < array.length; index++) {
       const row = array[index];
-      matriz[index] = this.moveRightRow(row);
+      matrix[index] = this.moveRightRow(row);
     }
-    return matriz
+    return matrix
   }
 
   public moveLeft(array: number[][]): number[][] {
     this.countMoviments += 1;
-    let matriz: number[][];
+    let matrix: number[][]=[];
     for (let index = 0; index < array.length; index++) {
       const row = array[index];
-      matriz[index] = this.moveLeftRow(row);
+      matrix[index] = this.moveLeftRow(row);
     }
-    return matriz
+    return matrix
   }
 
   public moveUp(array: number[][]): number[][] {
     this.countMoviments += 1;
-    let matriz: number[][];
-    return matriz
+    array = this.transpose(array);
+    let matrix: number[][]=[];
+    for (let index = 0; index < array.length; index++) {
+      const row = array[index];
+      matrix[index] = this.moveLeftRow(row);
+    }
+    return this.transpose(matrix);
   }
 
   public moveDown(array: number[][]): number[][] {
     this.countMoviments += 1;
-    let matriz: number[][];
-    return matriz
+    array = this.transpose(array);
+    let matrix: number[][]=[];
+    for (let index = 0; index < array.length; index++) {
+      const row = array[index];
+      matrix[index] = this.moveRightRow(row);
+    }
+    return this.transpose(matrix);
   }
 
-  public moveRightRow(array:number[]):number[] {
+
+  /* También esta función resuelve movimientos Down mediante transpose*/
+  public moveRightRow(array:number[]): number[] {
     var i = array.length -1;
     var countRev=0;
     while (i>0 && countRev<array.length) {
@@ -149,6 +156,7 @@ export class Game2048Component implements OnInit {
     return array;
   }
 
+   /* También esta función resuelve movimientos UP mediante transpose */
   public moveLeftRow(array:number[]):number[] {
     var i = 0;
     var countRev=0;
@@ -159,7 +167,6 @@ export class Game2048Component implements OnInit {
         i=i-1;
       }
       countRev +=1
-      debugger;
       i = i+1;
     }
     i = 0;
@@ -177,6 +184,10 @@ export class Game2048Component implements OnInit {
       i = i+1;
     }
     return array;
+  }
+
+  transpose(matrix) {
+    return matrix[0].map((col, i) => matrix.map(row => row[i]));
   }
 
 }

@@ -41,6 +41,7 @@ describe('Test for game component init',()=> {
 
 describe('Test for movements game', ()=> {
   let component: Game2048Component = new Game2048Component();
+  //derecha
   it(
     'derecha simple 1', ()=> {
       expect(component.moveRight([[2,0],[0,0]]))
@@ -65,8 +66,6 @@ describe('Test for movements game', ()=> {
       .toEqual([[2,4],[2,4]]);
     }
   );
-
-  //derecha
   it(
     'trivial derecha ceros', ()=> {
       expect(component.moveRightRow([0,0,0,0,0]))
@@ -112,6 +111,30 @@ describe('Test for movements game', ()=> {
 
   //izquierda
   it(
+    'izquierda simple 1', ()=> {
+      expect(component.moveLeft([[2,0],[0,0]]))
+      .toEqual([[2,0],[0,0]]);
+    }
+  );
+  it(
+    'izquierda simple 2', ()=> {
+      expect(component.moveLeft([[2,2],[0,0]]))
+      .toEqual([[4,0],[0,0]]);
+    }
+  );
+  it(
+    'izquierda simple 3', ()=> {
+      expect(component.moveLeft([[2,2],[2,2]]))
+      .toEqual([[4,0],[4,0]]);
+    }
+  );
+  it(
+    'izquierda simple 4', ()=> {
+      expect(component.moveLeft([[2,4],[2,4]]))
+      .toEqual([[2,4],[2,4]]);
+    }
+  );
+  it(
     'trivial izquierda ceros', ()=> {
       expect(component.moveLeftRow([0,0,0,0,0]))
       .toEqual([0,0,0,0,0]);
@@ -151,6 +174,19 @@ describe('Test for movements game', ()=> {
     'izquierda fila simple 6', ()=> {
       expect(component.moveLeftRow([4,0,0,4,8]))
       .toEqual([8,8,0,0,0]);
+    }
+  );
+  //Arriba
+  it(
+    'arriba simple 1', ()=> {
+      expect(component.moveUp([[0,2,0],[0,0,2],[0,2,0]]))
+      .toEqual([[0,4,2],[0,0,0],[0,0,0]]);
+    }
+  );
+  it(
+    'arriba simple 2', ()=> {
+      expect(component.moveUp([[2,2,4],[4,0,2],[0,2,2]]))
+      .toEqual([[2,4,4],[4,0,4],[0,0,0]]);
     }
   );
 });
