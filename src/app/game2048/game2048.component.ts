@@ -20,10 +20,6 @@ export class Game2048Component implements OnInit {
     //this.array = this.createArray(this.sizeArray);
     //this.array = this.randomInCeros(this.array,this.sizeArray);
     this.array = [
-      [4,0,0,4,8],
-      [4,0,0,4,8],
-      [4,0,0,4,8],
-      [4,0,0,4,8],
       [4,0,0,4,8]
     ];
     
@@ -134,7 +130,6 @@ export class Game2048Component implements OnInit {
         i=i+1;
       }
       countRev +=1
-      debugger;
       i = i-1;
     }
     i = array.length -1;
@@ -155,6 +150,32 @@ export class Game2048Component implements OnInit {
   }
 
   public moveLeftRow(array:number[]):number[] {
+    var i = 0;
+    var countRev=0;
+    while (i<array.length && countRev<array.length) {
+      if (array[i]===0) {
+        array.splice(i, 1);
+        array.push(0);
+        i=i-1;
+      }
+      countRev +=1
+      debugger;
+      i = i+1;
+    }
+    i = 0;
+    while (i<array.length){
+      if (array[i]==0){
+        i=array.length +1;
+      }
+      else{
+        if (array[i] == array[i+1]) {
+          array[i]=array[i+1]+array[i];
+          array.splice(i+1, 1);
+          array.push(0);
+        }
+      }
+      i = i+1;
+    }
     return array;
   }
 
