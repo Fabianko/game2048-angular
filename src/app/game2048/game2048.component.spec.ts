@@ -65,6 +65,14 @@ describe('Test for movements game', ()=> {
       .toEqual([[2,4],[2,4]]);
     }
   );
+
+  //derecha
+  it(
+    'trivial derecha ceros', ()=> {
+      expect(component.moveRightRow([0,0,0,0,0]))
+      .toEqual([0,0,0,0,0]);
+    }
+  );
   it(
     'derecha fila simple 1', ()=> {
       expect(component.moveRightRow([0,2,4,0,4]))
@@ -99,6 +107,50 @@ describe('Test for movements game', ()=> {
     'derecha fila simple 6', ()=> {
       expect(component.moveRightRow([4,0,0,4,8]))
       .toEqual([0,0,0,8,8]);
+    }
+  );
+
+  //izquierda
+  it(
+    'trivial izquierda ceros', ()=> {
+      expect(component.moveLeftRow([0,0,0,0,0]))
+      .toEqual([0,0,0,0,0]);
+    }
+  );
+  it(
+    'izquierda fila simple 1', ()=> {
+      expect(component.moveLeftRow([0,2,4,0,4]))
+      .toEqual([2,8,0,0,0]);
+    }
+  );
+  it(
+    'izquierda fila simple 2', ()=> {
+      expect(component.moveLeftRow([0,2,2,4,4]))
+      .toEqual([4,8,0,0,0]);
+    }
+  );
+  it(
+    'izquierda fila simple 3', ()=> {
+      expect(component.moveLeftRow([0,4,4,4,4]))
+      .toEqual([8,8,0,0,0]);
+    }
+  );
+  it(
+    'izquierda fila simple 4', ()=> {
+      expect(component.moveLeftRow([0,0,4,4,4]))
+      .toEqual([8,4,0,0,0]);
+    }
+  );
+  it(
+    'izquierda fila simple 5', ()=> {
+      expect(component.moveLeftRow([0,0,4,4,8]))
+      .toEqual([8,8,0,0,0]);
+    }
+  );
+  it(
+    'izquierda fila simple 6', ()=> {
+      expect(component.moveLeftRow([4,0,0,4,8]))
+      .toEqual([8,8,0,0,0]);
     }
   );
 });
