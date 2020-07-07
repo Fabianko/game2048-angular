@@ -1,4 +1,4 @@
-import { Component, OnInit,HostListener } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-game2048',
@@ -31,29 +31,11 @@ export class Game2048Component implements OnInit {
     console.log(key);
   }
 
-  @HostListener('keyup', ['$event'])
-    onKeyup(event: KeyboardEvent) {
-        // console.log(event);
-
-        if(
-               event.keyCode == 38 // arrow up
-            || event.keyCode == 40 // arrow down
-            || event.keyCode == 37 // arrow left
-            || event.keyCode == 39 // arrow right        
-        ) {         
-            event.preventDefault();              
-            this.host.checked = true;
-            // TODO: send event
-            this.host.change.emit(null);
-            // setTimeout(() => {
-            // }, 500);
-        }
-    }
 
   public clickUp() {
     this.array = this.moveUp(this.array);
     this.array = this.randomInCeros(this.array,this.sizeArray);
-    if (this.isEnd()) {
+    if (this.isEnd(this.array,this.sizeArray)) {
       console.log("termino el juego");
       return;
     }
@@ -62,7 +44,7 @@ export class Game2048Component implements OnInit {
   public clickDown() {
     this.array = this.moveDown(this.array);
     this.array = this.randomInCeros(this.array,this.sizeArray);
-    if (this.isEnd()) {
+    if (this.isEnd(this.array,this.sizeArray)) {
       console.log("termino el juego");
       return;
     }
@@ -71,7 +53,7 @@ export class Game2048Component implements OnInit {
   public clickLeft() {
     this.array = this.moveLeft(this.array);
     this.array = this.randomInCeros(this.array,this.sizeArray);
-    if (this.isEnd()) {
+    if (this.isEnd(this.array,this.sizeArray)) {
       console.log("termino el juego");
       return;
     }
@@ -80,7 +62,7 @@ export class Game2048Component implements OnInit {
   public clickRight() {
     this.array = this.moveRight(this.array);
     this.array = this.randomInCeros(this.array,this.sizeArray);
-    if (this.isEnd()) {
+    if (this.isEnd(this.array,this.sizeArray)) {
       console.log("termino el juego");
       return;
     }
