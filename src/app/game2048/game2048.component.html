@@ -1,6 +1,6 @@
 <h1 class="text-center">GAME2048x by Farismendi</h1>
 
-<div class="container">
+<div class="container" >
     <div class="row ">
         <div class="col-md-12">
             <p class="text-center">
@@ -15,11 +15,30 @@
                 <ng-container *ngFor="let row of array; let i=index">
                     <p>
                         <ng-container *ngFor="let col of row; let j=index">
-                            <span class="elem-game">{{col}}</span> ({{i}},{{j}})
+                            <span class="elem-game">{{col}}</span> 
+                            <span class="vector-elem">({{i}},{{j}})</span>
                         </ng-container>
                     </p>
                 </ng-container>
             </ng-container>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 text-center">
+            <button (click)="clickUp()">
+                up
+            </button>
+        </div>
+        <div class="col-md-12 text-center">
+            <button (click)="clickLeft()">
+                left
+            </button>
+            <button (click)="clickDown()">
+                down
+            </button>
+            <button (click)="clickRight()">
+                right
+            </button>
         </div>
     </div>
     

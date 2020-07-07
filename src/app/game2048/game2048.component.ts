@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit,HostListener } from '@angular/core';
 
 @Component({
   selector: 'app-game2048',
@@ -16,18 +16,78 @@ export class Game2048Component implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
-    //this.sizeArray = 2;
-    //this.array = this.createArray(this.sizeArray);
-    //this.array = this.randomInCeros(this.array,this.sizeArray);
-    this.array = [
-      [0,2,0],[0,0,2],[0,2,0]
-    ];
-    
+    this.sizeArray = 4;
+    this.array = this.createArray(this.sizeArray);
+    this.array = this.randomInCeros(this.array,this.sizeArray);
+
+    /*
     setTimeout(
       ()=>{this.array = this.moveUp(this.array);
       },1000);
-    
+    */
   }
+
+  public control(key) {
+    console.log(key);
+  }
+
+  @HostListener('keyup', ['$event'])
+    onKeyup(event: KeyboardEvent) {
+        // console.log(event);
+
+        if(
+               event.keyCode == 38 // arrow up
+            || event.keyCode == 40 // arrow down
+            || event.keyCode == 37 // arrow left
+            || event.keyCode == 39 // arrow right        
+        ) {         
+            event.preventDefault();              
+            this.host.checked = true;
+            // TODO: send event
+            this.host.change.emit(null);
+            // setTimeout(() => {
+            // }, 500);
+        }
+    }
+
+  public clickUp() {
+    this.array = this.moveUp(this.array);
+    this.array = this.randomInCeros(this.array,this.sizeArray);
+    if (this.isEnd()) {
+      console.log("termino el juego");
+      return;
+    }
+  }
+
+  public clickDown() {
+    this.array = this.moveDown(this.array);
+    this.array = this.randomInCeros(this.array,this.sizeArray);
+    if (this.isEnd()) {
+      console.log("termino el juego");
+      return;
+    }
+  }
+
+  public clickLeft() {
+    this.array = this.moveLeft(this.array);
+    this.array = this.randomInCeros(this.array,this.sizeArray);
+    if (this.isEnd()) {
+      console.log("termino el juego");
+      return;
+    }
+  }
+
+  public clickRight() {
+    this.array = this.moveRight(this.array);
+    this.array = this.randomInCeros(this.array,this.sizeArray);
+    if (this.isEnd()) {
+      console.log("termino el juego");
+      return;
+    }
+  }
+
+
+
 
   public createArray(size: number):  number[][] {
     var i = 0;
