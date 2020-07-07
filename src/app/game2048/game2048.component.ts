@@ -11,18 +11,26 @@ export class Game2048Component implements OnInit {
 
   sizeArray: number;
 
+  countMoviments: number = 0;
+
   constructor() { }
 
   ngOnInit(): void {
     this.sizeArray = 2;
-    this.array = this.createArray(this.sizeArray);
-    this.array = this.randomInCeros(this.array,this.sizeArray);
+    //this.array = this.createArray(this.sizeArray);
+    //this.array = this.randomInCeros(this.array,this.sizeArray);
+    this.array = [
+      [4,0,0,4,8],
+      [4,0,0,4,8],
+      [4,0,0,4,8],
+      [4,0,0,4,8],
+      [4,0,0,4,8]
+    ];
+    
     setTimeout(
-      ()=>{
-        this.array = this.moveRight(this.array);
-      },
-      1000
-    );
+      ()=>{this.array = this.moveLeft(this.array);
+      },1000);
+    
   }
 
   public createArray(size: number):  number[][] {
@@ -85,9 +93,8 @@ export class Game2048Component implements OnInit {
   }
 
   public moveRight(array: number[][]): number[][] {
+    this.countMoviments += 1;
     let matriz: number[][]=[];
-
-    debugger;
     for (let index = 0; index < array.length; index++) {
       const row = array[index];
       matriz[index] = this.moveRightRow(row);
@@ -96,45 +103,59 @@ export class Game2048Component implements OnInit {
   }
 
   public moveLeft(array: number[][]): number[][] {
+    this.countMoviments += 1;
     let matriz: number[][];
+    for (let index = 0; index < array.length; index++) {
+      const row = array[index];
+      matriz[index] = this.moveLeftRow(row);
+    }
     return matriz
   }
 
   public moveUp(array: number[][]): number[][] {
+    this.countMoviments += 1;
     let matriz: number[][];
     return matriz
   }
 
   public moveDown(array: number[][]): number[][] {
+    this.countMoviments += 1;
     let matriz: number[][];
     return matriz
   }
 
   public moveRightRow(array:number[]):number[] {
-    let newRow: number[] = [];
-    for (let elem of array) {
-      newRow.push(0);
-    }
     var i = array.length -1;
-    debugger;
-    while (i>0) {
+    var countRev=0;
+    while (i>0 && countRev<array.length) {
       if (array[i]===0) {
-        let j = i-1; 
-        while (j>=0) {
-          if (array[j]!=0) {
-            array[i]=array[j];
-            array[j]=0;
-            j = -2;
-            i = i-1;
-          }
-          j = j-1;
-        }
-        if (j!=-2){
-          i = i-1;
+        array.splice(i, 1);
+        array.unshift(0);
+        i=i+1;
+      }
+      countRev +=1
+      debugger;
+      i = i-1;
+    }
+    i = array.length -1;
+    while (i>0){
+      if (array[i]==0){
+        i=-2;
+      }
+      else{
+        if (array[i] == array[i-1]) {
+          array[i]=array[i-1]+array[i];
+          array.splice(i-1, 1);
+          array.unshift(0);
         }
       }
+      i = i-1;
     }
-    return newRow;
+    return array;
+  }
+
+  public moveLeftRow(array:number[]):number[] {
+    return array;
   }
 
 }
