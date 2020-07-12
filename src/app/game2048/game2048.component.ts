@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, HostListener } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 @Component({
   selector: 'app-game2048',
@@ -6,6 +6,19 @@ import { FormControl, Validators } from '@angular/forms';
   styleUrls: ['./game2048.component.less']
 })
 export class Game2048Component implements OnInit {
+
+  @HostListener('window:keydown.arrowleft') arrowleftEvent() {
+    this.clickLeft();
+  }
+  @HostListener('window:keydown.arrowright') arrowrightEvent() {
+    this.clickRight();
+  }
+  @HostListener('window:keydown.arrowup') arrowupEvent() {
+    this.clickUp();
+  }
+  @HostListener('window:keydown.arrowdown') arrowdownEvent() {
+    this.clickDown();
+  }
 
   array: number[][];
 
@@ -32,6 +45,8 @@ export class Game2048Component implements OnInit {
   }
 
   public configInit(){
+    this.countMoviments = 0;
+    this.history = [];
     this.array = this.createArray(this.sizeArray);
     this.array = this.randomInCeros(this.array,this.sizeArray);
     this.history.push(JSON.parse(JSON.stringify(this.array)));
