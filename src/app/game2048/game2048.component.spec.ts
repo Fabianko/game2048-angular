@@ -189,4 +189,16 @@ describe('Test for movements game', ()=> {
       .toEqual([[2,4,4],[4,0,4],[0,0,0]]);
     }
   );
+  it(
+    'randomCeros simple 1', ()=> {
+      expect(component.randomInCeros([[0,2],[2,2]],2))
+      .toEqual([[2,2],[2,2]]);
+    }
+  );
+  it(
+    'randomCeros simple 2', ()=> {
+      expect(component.randomInCeros([[2,2],[2,2]],2))
+      .toEqual([[2,2],[2,2]]);
+    }
+  );
 });

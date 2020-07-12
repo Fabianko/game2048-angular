@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-
+import { FormControl, Validators } from '@angular/forms';
 @Component({
   selector: 'app-game2048',
   templateUrl: './game2048.component.html',
@@ -9,63 +9,132 @@ export class Game2048Component implements OnInit {
 
   array: number[][];
 
-  sizeArray: number;
+  inputSize = new FormControl(
+    4,
+    [
+      Validators.min(3),
+      Validators.max(15),
+      Validators.pattern('[0-9]*')
+    ],[]);
+
+  endGame = false;
+
+  sizeArray: number = 2;
 
   countMoviments: number = 0;
+
+  history:number[][][] = [];
 
   constructor() { }
 
   ngOnInit(): void {
-    this.sizeArray = 4;
-    this.array = this.createArray(this.sizeArray);
-    this.array = this.randomInCeros(this.array,this.sizeArray);
-
-    /*
-    setTimeout(
-      ()=>{this.array = this.moveUp(this.array);
-      },1000);
-    */
+    this.configInit();
   }
 
-  public control(key) {
-    console.log(key);
+  public configInit(){
+    this.array = this.createArray(this.sizeArray);
+    this.array = this.randomInCeros(this.array,this.sizeArray);
+    this.history.push([...this.array]);
+  }
+
+
+  public backButton() {
+    this.array = [...this.history[this.countMoviments-1]];
+    this.endGame=false;
+    this.countMoviments-=1;
+  }
+
+  public changeSize() {
+    console.log(this.inputSize);
+    if (this.inputSize.status === "VALID") {
+      this.sizeArray = this.inputSize.value;
+      this.configInit();
+    }
+    
   }
 
 
   public clickUp() {
-    this.array = this.moveUp(this.array);
-    this.array = this.randomInCeros(this.array,this.sizeArray);
-    if (this.isEnd(this.array,this.sizeArray)) {
-      console.log("termino el juego");
-      return;
+    let temp = Array.from(this.array);
+    let temp2 = this.moveUp(this.array);
+    if (temp.toString() == temp2.toString()) {
+      console.log("iguales: ",temp,temp2);
+      return 0;
+    }
+    else{
+      this.array = Array.from(temp2);
+      this.countMoviments += 1;
+      this.array = this.randomInCeros(this.array,this.sizeArray);
+      this.history.push([...this.array]);
+      if (this.isEnd(this.array,this.sizeArray)) {
+        console.log("termino el juego");
+        this.endGame=true;
+        return 0;
+      }
     }
   }
 
   public clickDown() {
-    this.array = this.moveDown(this.array);
-    this.array = this.randomInCeros(this.array,this.sizeArray);
-    if (this.isEnd(this.array,this.sizeArray)) {
-      console.log("termino el juego");
-      return;
+    let temp = Array.from(this.array);
+    let temp2 = this.moveDown(this.array);
+    if (temp.toString() == temp2.toString()) {
+      console.log("iguales: ",temp,temp2);
+      return 0;
     }
+    else {
+      this.array=Array.from(temp2);
+      this.countMoviments += 1;
+      this.array = this.randomInCeros(this.array,this.sizeArray);
+      this.history.push([...this.array]);
+      if (this.isEnd(this.array,this.sizeArray)) {
+        console.log("termino el juego");
+        this.endGame=true;
+        return 0;
+      }
+    }
+    
   }
 
   public clickLeft() {
-    this.array = this.moveLeft(this.array);
-    this.array = this.randomInCeros(this.array,this.sizeArray);
-    if (this.isEnd(this.array,this.sizeArray)) {
-      console.log("termino el juego");
-      return;
+    let temp = Array.from(this.array);
+    let temp2 = [...this.moveLeft(this.array)];
+    if (temp.toString() == temp2.toString()) {
+      console.log("iguales: ",temp,temp2);
+      return 0;
     }
+    else{
+      this.array = Array.from(temp2);
+      this.countMoviments += 1;
+      this.array = this.randomInCeros(this.array,this.sizeArray);
+      this.history.push([...this.array]);
+      if (this.isEnd(this.array,this.sizeArray)) {
+        console.log("termino el juego");
+        this.endGame=true;
+        return 0;
+      }
+    }
+    
   }
 
   public clickRight() {
-    this.array = this.moveRight(this.array);
-    this.array = this.randomInCeros(this.array,this.sizeArray);
-    if (this.isEnd(this.array,this.sizeArray)) {
-      console.log("termino el juego");
-      return;
+    let temp = Array.from(this.array);
+    let temp2 = [...this.moveRight(this.array)];
+    if (temp.toString() == temp2.toString()) {
+      console.log("iguales: ",temp,temp2);
+      return 0;
     }
+    else {
+      this.array=Array.from(temp2);
+      this.countMoviments += 1;
+      this.array = this.randomInCeros(this.array,this.sizeArray);
+      this.history.push([...this.array]);
+      if (this.isEnd(this.array,this.sizeArray)) {
+        console.log("termino el juego");
+        this.endGame=true;
+        return 0;
+      }
+    }
+    
   }
 
 
@@ -118,6 +187,9 @@ export class Game2048Component implements OnInit {
 
   public randomInCeros(matrix: number[][], size: number): number[][] {
     let ceros = this.getCeros(matrix,size);
+    if (ceros.length==0) {
+      return matrix;
+    }
     let selected = Math.floor(Math.random() * (ceros.length - 0)) + 0;
     let i = ceros[selected]['i'];
     let j = ceros[selected]['j'];
@@ -126,7 +198,7 @@ export class Game2048Component implements OnInit {
   }
 
   public moveRight(array: number[][]): number[][] {
-    this.countMoviments += 1;
+    
     let matrix: number[][]=[];
     for (let index = 0; index < array.length; index++) {
       const row = array[index];
@@ -136,7 +208,6 @@ export class Game2048Component implements OnInit {
   }
 
   public moveLeft(array: number[][]): number[][] {
-    this.countMoviments += 1;
     let matrix: number[][]=[];
     for (let index = 0; index < array.length; index++) {
       const row = array[index];
@@ -146,7 +217,6 @@ export class Game2048Component implements OnInit {
   }
 
   public moveUp(array: number[][]): number[][] {
-    this.countMoviments += 1;
     array = this.transpose(array);
     let matrix: number[][]=[];
     for (let index = 0; index < array.length; index++) {
@@ -157,7 +227,6 @@ export class Game2048Component implements OnInit {
   }
 
   public moveDown(array: number[][]): number[][] {
-    this.countMoviments += 1;
     array = this.transpose(array);
     let matrix: number[][]=[];
     for (let index = 0; index < array.length; index++) {
