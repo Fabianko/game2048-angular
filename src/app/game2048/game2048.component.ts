@@ -1,5 +1,6 @@
 import { Component, OnInit, HostListener } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
+import { typeWithParameters } from '@angular/compiler/src/render3/util';
 @Component({
   selector: 'app-game2048',
   templateUrl: './game2048.component.html',
@@ -22,6 +23,8 @@ export class Game2048Component implements OnInit {
 
   array: number[][];
 
+  maxValue: number = 0;
+
   inputSize = new FormControl(
     4,
     [
@@ -32,7 +35,7 @@ export class Game2048Component implements OnInit {
 
   endGame = false;
 
-  sizeArray: number = 2;
+  sizeArray: number = 4;
 
   countMoviments: number = 0;
 
@@ -50,6 +53,7 @@ export class Game2048Component implements OnInit {
     this.array = this.createArray(this.sizeArray);
     this.array = this.randomInCeros(this.array,this.sizeArray);
     this.history.push(JSON.parse(JSON.stringify(this.array)));
+    this.getMaxValue(this.array);
   }
 
 
@@ -57,10 +61,10 @@ export class Game2048Component implements OnInit {
     this.array = JSON.parse(JSON.stringify(this.history[this.countMoviments-1]));
     this.endGame=false;
     this.countMoviments-=1;
+    this.getMaxValue(this.array);
   }
 
   public changeSize() {
-    console.log(this.inputSize);
     if (this.inputSize.status === "VALID") {
       this.sizeArray = this.inputSize.value;
       this.configInit();
@@ -87,6 +91,17 @@ export class Game2048Component implements OnInit {
     this.nextStep(matrix);
   }
 
+  public getMaxValue(matrix:number[][]) {
+    debugger;
+    for  (let i = 0; i < matrix.length; i++) {
+      for (let j = 0; j < matrix[i].length;j++) {
+        if (matrix[i][j]>this.maxValue) {
+          this.maxValue = matrix[i][j];
+        }
+      }
+    }
+  }
+
   public nextStep(matrix:number[][]) {
     if (this.history[this.countMoviments].toString() == matrix.toString()) {
       return 0;
@@ -96,6 +111,7 @@ export class Game2048Component implements OnInit {
       this.countMoviments += 1;
       this.array = JSON.parse(JSON.stringify(this.randomInCeros(this.array,this.sizeArray)));
       this.history.push(JSON.parse(JSON.stringify(this.array)));
+      this.getMaxValue(this.array);
       if (this.isEnd(this.array,this.sizeArray)) {
         console.log("termino el juego");
         this.endGame=true;
@@ -118,7 +134,6 @@ export class Game2048Component implements OnInit {
       }
       i = i + 1;
     }
-    console.log(matrix) 
     return matrix;
   }
 
