@@ -201,4 +201,16 @@ describe('Test for movements game', ()=> {
       .toEqual([[2,2],[2,2]]);
     }
   );
+  it(
+    'definición de termino 1', ()=> {
+      expect(component.isEnd([[2,4],[8,16]],2))
+      .toEqual(true);
+    }
+  );
+  it(
+    'definición de termino 2', ()=> {
+      expect(component.isEnd([[2,2],[8,16]],2))
+      .toEqual(false);
+    }
+  );
 });

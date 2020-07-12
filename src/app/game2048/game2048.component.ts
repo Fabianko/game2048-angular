@@ -34,12 +34,12 @@ export class Game2048Component implements OnInit {
   public configInit(){
     this.array = this.createArray(this.sizeArray);
     this.array = this.randomInCeros(this.array,this.sizeArray);
-    this.history.push([...this.array]);
+    this.history.push(JSON.parse(JSON.stringify(this.array)));
   }
 
 
   public backButton() {
-    this.array = [...this.history[this.countMoviments-1]];
+    this.array = JSON.parse(JSON.stringify(this.history[this.countMoviments-1]));
     this.endGame=false;
     this.countMoviments-=1;
   }
@@ -50,95 +50,44 @@ export class Game2048Component implements OnInit {
       this.sizeArray = this.inputSize.value;
       this.configInit();
     }
-    
   }
 
-
   public clickUp() {
-    let temp = Array.from(this.array);
-    let temp2 = this.moveUp(this.array);
-    if (temp.toString() == temp2.toString()) {
-      console.log("iguales: ",temp,temp2);
-      return 0;
-    }
-    else{
-      this.array = Array.from(temp2);
-      this.countMoviments += 1;
-      this.array = this.randomInCeros(this.array,this.sizeArray);
-      this.history.push([...this.array]);
-      if (this.isEnd(this.array,this.sizeArray)) {
-        console.log("termino el juego");
-        this.endGame=true;
-        return 0;
-      }
-    }
+    let matrix:number[][] = JSON.parse(JSON.stringify(this.moveUp(this.array)));
+    this.nextStep(matrix);
   }
 
   public clickDown() {
-    let temp = Array.from(this.array);
-    let temp2 = this.moveDown(this.array);
-    if (temp.toString() == temp2.toString()) {
-      console.log("iguales: ",temp,temp2);
-      return 0;
-    }
-    else {
-      this.array=Array.from(temp2);
-      this.countMoviments += 1;
-      this.array = this.randomInCeros(this.array,this.sizeArray);
-      this.history.push([...this.array]);
-      if (this.isEnd(this.array,this.sizeArray)) {
-        console.log("termino el juego");
-        this.endGame=true;
-        return 0;
-      }
-    }
-    
+    let matrix:number[][] = JSON.parse(JSON.stringify(this.moveDown(this.array)));
+    this.nextStep(matrix);
   }
 
   public clickLeft() {
-    let temp = Array.from(this.array);
-    let temp2 = [...this.moveLeft(this.array)];
-    if (temp.toString() == temp2.toString()) {
-      console.log("iguales: ",temp,temp2);
-      return 0;
-    }
-    else{
-      this.array = Array.from(temp2);
-      this.countMoviments += 1;
-      this.array = this.randomInCeros(this.array,this.sizeArray);
-      this.history.push([...this.array]);
-      if (this.isEnd(this.array,this.sizeArray)) {
-        console.log("termino el juego");
-        this.endGame=true;
-        return 0;
-      }
-    }
-    
+    let matrix: number[][] = JSON.parse(JSON.stringify(this.moveLeft(this.array)));
+    this.nextStep(matrix);
   }
 
   public clickRight() {
-    let temp = Array.from(this.array);
-    let temp2 = [...this.moveRight(this.array)];
-    if (temp.toString() == temp2.toString()) {
-      console.log("iguales: ",temp,temp2);
+    let matrix: number[][] = JSON.parse(JSON.stringify(this.moveRight(this.array)));
+    this.nextStep(matrix);
+  }
+
+  public nextStep(matrix:number[][]) {
+    if (this.history[this.countMoviments].toString() == matrix.toString()) {
       return 0;
     }
     else {
-      this.array=Array.from(temp2);
+      this.array = JSON.parse(JSON.stringify(matrix));
       this.countMoviments += 1;
-      this.array = this.randomInCeros(this.array,this.sizeArray);
-      this.history.push([...this.array]);
+      this.array = JSON.parse(JSON.stringify(this.randomInCeros(this.array,this.sizeArray)));
+      this.history.push(JSON.parse(JSON.stringify(this.array)));
       if (this.isEnd(this.array,this.sizeArray)) {
         console.log("termino el juego");
         this.endGame=true;
         return 0;
       }
     }
-    
   }
-
-
-
 
   public createArray(size: number):  number[][] {
     var i = 0;
@@ -175,10 +124,20 @@ export class Game2048Component implements OnInit {
   }
 
   //condicion de termino del juego
-  public isEnd(matrix,size) {
+  public isEnd(matrix: number[][],size:number): boolean {
     let ceros = this.getCeros(matrix,size);
-    if (ceros.length===0) {
-      return true;
+    if (ceros.length === 0) {
+      if (
+        this.getCeros(this.moveUp(JSON.parse(JSON.stringify(matrix))),size).length > 0 ||
+        this.getCeros(this.moveDown(JSON.parse(JSON.stringify(matrix))),size).length > 0 ||
+        this.getCeros(this.moveLeft(JSON.parse(JSON.stringify(matrix))),size).length > 0 ||
+        this.getCeros(this.moveRight(JSON.parse(JSON.stringify(matrix))),size).length > 0
+      ) {
+        return false;
+      }
+      else {
+        return true;
+      }
     }
     else {
       return false;
@@ -198,13 +157,12 @@ export class Game2048Component implements OnInit {
   }
 
   public moveRight(array: number[][]): number[][] {
-    
     let matrix: number[][]=[];
     for (let index = 0; index < array.length; index++) {
       const row = array[index];
       matrix[index] = this.moveRightRow(row);
     }
-    return matrix
+    return this.transpose(this.transpose(matrix));
   }
 
   public moveLeft(array: number[][]): number[][] {
@@ -213,7 +171,7 @@ export class Game2048Component implements OnInit {
       const row = array[index];
       matrix[index] = this.moveLeftRow(row);
     }
-    return matrix
+    return this.transpose(this.transpose(matrix));
   }
 
   public moveUp(array: number[][]): number[][] {
@@ -235,7 +193,6 @@ export class Game2048Component implements OnInit {
     }
     return this.transpose(matrix);
   }
-
 
   /* También esta función resuelve movimientos Down mediante transpose*/
   public moveRightRow(array:number[]): number[] {
@@ -301,4 +258,5 @@ export class Game2048Component implements OnInit {
     return matrix[0].map((col, i) => matrix.map(row => row[i]));
   }
 
+  // thanks: https://www.freecodecamp.org/news/how-to-clone-an-array-in-javascript-1d3183468f6a/
 }
